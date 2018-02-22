@@ -71,19 +71,19 @@ while running:
             if event.key == pygame.K_d:
                 with gameDB:
                     cur = gameDB.cursor()
-                    cur.execute('UPDATE game SET posX=' + str(read(gameDB, 'game')[0][0] + 5) + " WHERE posY=" + str(read(gameDB, 'gamePos')[0][1]))
+                    cur.execute('UPDATE gamePos SET posX=' + str(read(gameDB, 'gamePos')[0][0] + 5) + " WHERE posY=" + str(read(gameDB, 'gamePos')[0][1]))
             if event.key == pygame.K_a:
                 with gameDB:
                     cur = gameDB.cursor()
-                    cur.execute('UPDATE game SET posX=' + str(read(gameDB, 'game')[0][0] - 5) + " WHERE posY=" + str(read(gameDB, 'gamePos')[0][1]))
+                    cur.execute('UPDATE gamePos SET posX=' + str(read(gameDB, 'gamePos')[0][0] - 5) + " WHERE posY=" + str(read(gameDB, 'gamePos')[0][1]))
             if event.key == pygame.K_w:
                 with gameDB:
                     cur = gameDB.cursor()
-                    cur.execute('UPDATE game SET posY=' + str(read(gameDB, 'game')[0][1] - 5) + " WHERE posX=" + str(read(gameDB, 'gamePos')[0][0]))
+                    cur.execute('UPDATE gamePos SET posY=' + str(read(gameDB, 'gamePos')[0][1] - 5) + " WHERE posX=" + str(read(gameDB, 'gamePos')[0][0]))
             if event.key == pygame.K_s:
                 with gameDB:
                     cur = gameDB.cursor()
-                    cur.execute('UPDATE game SET posY=' + str(read(gameDB, 'game')[0][1] + 5) + " WHERE posX=" + str(read(gameDB, 'gamePos')[0][0]))
+                    cur.execute('UPDATE gamePos SET posY=' + str(read(gameDB, 'gamePos')[0][1] + 5) + " WHERE posX=" + str(read(gameDB, 'gamePos')[0][0]))
     display.fill((0, 0, 0))
 
     Render.renderRect((255, 255, 255), read(gameDB, 'gamePos')[0], (70, 70), display)
