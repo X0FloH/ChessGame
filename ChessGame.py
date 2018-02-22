@@ -6,7 +6,7 @@ import Render
 
 displaySize = (1000, 900)
 
-gameDB = lite.connect('test.db')
+gameDB = lite.connect('ChessMaster.db')
 
 pygame.init()
 
@@ -58,9 +58,9 @@ def delete(con, name):
 
 #----------------------------------------------------------START CODING HERE----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-make(gameDB, '(posX INT, posY INT)', 'game')
-write(gameDB, (100, 100), 'game')
-write(gameDB, (200, 200), 'game')
+make(gameDB, '(posX INT, posY INT)', 'gamePos')
+write(gameDB, (100, 100), 'gamePos')
+write(gameDB, (200, 200), 'gamePos')
 
 while running:
     events = pygame.event.get()
@@ -71,23 +71,23 @@ while running:
             if event.key == pygame.K_d:
                 with gameDB:
                     cur = gameDB.cursor()
-                    cur.execute('UPDATE game SET posX=' + str(read(gameDB, 'game')[0][0] + 5) + " WHERE posY=" + str(read(gameDB, 'game')[0][1]))
+                    cur.execute('UPDATE game SET posX=' + str(read(gameDB, 'game')[0][0] + 5) + " WHERE posY=" + str(read(gameDB, 'gamePos')[0][1]))
             if event.key == pygame.K_a:
                 with gameDB:
                     cur = gameDB.cursor()
-                    cur.execute('UPDATE game SET posX=' + str(read(gameDB, 'game')[0][0] - 5) + " WHERE posY=" + str(read(gameDB, 'game')[0][1]))
+                    cur.execute('UPDATE game SET posX=' + str(read(gameDB, 'game')[0][0] - 5) + " WHERE posY=" + str(read(gameDB, 'gamePos')[0][1]))
             if event.key == pygame.K_w:
                 with gameDB:
                     cur = gameDB.cursor()
-                    cur.execute('UPDATE game SET posY=' + str(read(gameDB, 'game')[0][1] - 5) + " WHERE posX=" + str(read(gameDB, 'game')[0][0]))
+                    cur.execute('UPDATE game SET posY=' + str(read(gameDB, 'game')[0][1] - 5) + " WHERE posX=" + str(read(gameDB, 'gamePos')[0][0]))
             if event.key == pygame.K_s:
                 with gameDB:
                     cur = gameDB.cursor()
-                    cur.execute('UPDATE game SET posY=' + str(read(gameDB, 'game')[0][1] + 5) + " WHERE posX=" + str(read(gameDB, 'game')[0][0]))
+                    cur.execute('UPDATE game SET posY=' + str(read(gameDB, 'game')[0][1] + 5) + " WHERE posX=" + str(read(gameDB, 'gamePos')[0][0]))
     display.fill((0, 0, 0))
 
-    Render.renderRect((255, 255, 255), read(gameDB, 'game')[0], (70, 70), display)
-    Render.renderRect((0, 255, 255), read(gameDB, 'game')[1], (70, 70), display)
+    Render.renderRect((255, 255, 255), read(gameDB, 'gamePos')[0], (70, 70), display)
+    Render.renderRect((0, 255, 255), read(gameDB, 'gamePos')[1], (70, 70), display)
 
     pygame.display.update()
 pygame.quit()
