@@ -2,14 +2,17 @@ import pygame
 
 import sqlite3 as lite
 import sys
+import Render
 
 displaySize = (1000, 900)
 
-#pygame.init()
+gameDB = lite.connect('test.db')
 
-#pygame.display.set_caption('Chess Networked V0.1')
+pygame.init()
 
-#display = pygame.display.set_mode(displaySize)
+pygame.display.set_caption('Chess Networked V0.1')
+
+display = pygame.display.set_mode(displaySize)
 
 running = True
 
@@ -27,10 +30,6 @@ def write(con, data, name):
             con.rollback()
 
         print("Error %s:" % e.args[0])
-
-    finally:
-        if con:
-            con.close()
 
 def make(con, data, name, overwrite=False):
     with con:
@@ -51,12 +50,45 @@ def read(con, name):
 
         return rows
 
-make(lite.connect('test.db'), "(Id INT, Name STRING, Price INT)", 'NewCar')
-write(lite.connect('test.db'), (1, 'THIS SHOULD WORK!!!', 10000000), 'NewCar')
-write(lite.connect('test.db'), (10000, 'ANOTHER!!!',100000000000000000000000), 'NewCar')
-print(str(read(lite.connect('test.db'), 'NewCar')))
+def delete(con, name):
+    with con:
+        cur = con.cursor()
 
-#while running:
-    #display.fill((0, 0, 0))
+        cur.execute('DROP TABLE IF EXISTS ' + name)
 
-    #pygame.display.update()
+#----------------------------------------------------------START CODING HERE----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+make(gameDB, '(posX INT, posY INT)', 'game')
+write(gameDB, (100, 100), 'game')
+write(gameDB, (200, 200), 'game')
+
+while running:
+    events = pygame.event.get()
+    for event in events:
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_d:
+                with gameDB:
+                    cur = gameDB.cursor()
+                    cur.execute('UPDATE game SET posX=' + str(read(gameDB, 'game')[0][0] + 5) + " WHERE posY=" + str(read(gameDB, 'game')[0][1]))
+            if event.key == pygame.K_a:
+                with gameDB:
+                    cur = gameDB.cursor()
+                    cur.execute('UPDATE game SET posX=' + str(read(gameDB, 'game')[0][0] - 5) + " WHERE posY=" + str(read(gameDB, 'game')[0][1]))
+            if event.key == pygame.K_w:
+                with gameDB:
+                    cur = gameDB.cursor()
+                    cur.execute('UPDATE game SET posY=' + str(read(gameDB, 'game')[0][1] - 5) + " WHERE posX=" + str(read(gameDB, 'game')[0][0]))
+            if event.key == pygame.K_s:
+                with gameDB:
+                    cur = gameDB.cursor()
+                    cur.execute('UPDATE game SET posY=' + str(read(gameDB, 'game')[0][1] + 5) + " WHERE posX=" + str(read(gameDB, 'game')[0][0]))
+    display.fill((0, 0, 0))
+
+    Render.renderRect((255, 255, 255), read(gameDB, 'game')[0], (70, 70), display)
+    Render.renderRect((0, 255, 255), read(gameDB, 'game')[1], (70, 70), display)
+
+    pygame.display.update()
+pygame.quit()
+quit()
